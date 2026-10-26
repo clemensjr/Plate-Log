@@ -2,7 +2,7 @@
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Plate Log">
@@ -250,6 +250,19 @@ svg{display:block}
 .sess span{color:var(--muted);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
 .stack{display:flex;flex-direction:column;gap:10px;margin-top:14px}
 @media (prefers-reduced-motion: reduce){.panel{animation:none}}
+/* iOS layout hardening: fill the screen, never grow wider than it */
+html{-webkit-text-size-adjust:100%;overflow-x:hidden}
+body{width:100%;overflow-x:hidden;min-height:100vh;min-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}
+.app{width:100%;min-width:0;overflow-x:clip}
+.head>div{min-width:0}
+.sumrow{grid-template-columns:repeat(3,minmax(0,1fr))}
+.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.tri{grid-template-columns:repeat(3,minmax(0,1fr))}
+.addrow{grid-template-columns:repeat(2,minmax(0,1fr))}
+.fld,.stepper{min-width:0}
+.stepper .draft{width:auto;flex:1 1 0;min-width:0}
+.hrow{display:block}
+.hrow .hin{display:grid;grid-template-columns:46px minmax(0,1fr) auto;gap:12px;align-items:center}
 </style>
 </head>
 <body>
@@ -746,7 +759,7 @@ function viewHistory(){
     const m=fmtMonth(d); if(m!==month){month=m;h+='<h3 class="sec">'+esc(m)+'</h3>';}
     const names=dayEntries(d).filter(e=>e.sets.length).map(e=>getEx(e.ex,e.n).name).join(', ');
     const dt=parse(d);
-    h+='<button class="hrow" data-act="hist-open" data-v="'+d+'"><span class="dt"><b>'+dt.getDate()+'</b><span>'+esc(new Intl.DateTimeFormat(undefined,{weekday:'short'}).format(dt))+'</span></span><span class="nm">'+esc(names)+'</span><span class="st"><b>'+nf(toDisp(dayVolume(d)))+'</b>'+loggedSets(d)+' sets \u00b7 '+unit()+'</span></button>';
+    h+='<button class="hrow" data-act="hist-open" data-v="'+d+'"><span class="hin"><span class="dt"><b>'+dt.getDate()+'</b><span>'+esc(new Intl.DateTimeFormat(undefined,{weekday:'short'}).format(dt))+'</span></span><span class="nm">'+esc(names)+'</span><span class="st"><b>'+nf(toDisp(dayVolume(d)))+'</b>'+loggedSets(d)+' sets \u00b7 '+unit()+'</span></span></button>';
   });
   return h;
 }

@@ -252,7 +252,9 @@ svg{display:block}
 @media (prefers-reduced-motion: reduce){.panel{animation:none}}
 /* iOS layout hardening: fill the screen, never grow wider than it */
 html{-webkit-text-size-adjust:100%;overflow-x:hidden}
-body{width:100%;overflow-x:hidden;min-height:100vh;min-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}
+/* Every page must be scrollable (even by 2px). iOS standalone mis-sizes the viewport on short, non-scrolling pages and the fixed tab bar floats up. */
+html{min-height:calc(100vh + 2px);min-height:calc(100lvh + 2px)}
+body{width:100%;overflow-x:hidden}
 .app{width:100%;min-width:0;overflow-x:clip}
 .head>div{min-width:0}
 .sumrow{grid-template-columns:repeat(3,minmax(0,1fr))}
